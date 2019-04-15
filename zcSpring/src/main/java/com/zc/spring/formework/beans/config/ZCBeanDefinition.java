@@ -2,6 +2,9 @@ package com.zc.spring.formework.beans.config;
 
 import lombok.Data;
 
+/**
+ *
+ */
 @Data
 public class ZCBeanDefinition {
    private String beanClassName;

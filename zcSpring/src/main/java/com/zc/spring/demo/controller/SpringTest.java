@@ -12,10 +12,8 @@ import com.zc.spring.formework.context.ZCApplicationContext;
 public class SpringTest {
 
     public static void main(String[] args) throws Exception {
-        ZCApplicationContext context = new ZCApplicationContext("application.properties");
+        ZCApplicationContext context = new ZCApplicationContext
+                ("application.properties");
         context.getBean("indexController");
-
-        System.out.println(context);
-
     }
 }
