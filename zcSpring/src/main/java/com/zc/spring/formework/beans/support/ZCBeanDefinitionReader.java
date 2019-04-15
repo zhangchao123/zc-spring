@@ -41,14 +41,14 @@ public class ZCBeanDefinitionReader {
 
     //扫描类
     private void doScanner(String scannerPackage) {
-        URL url = this.getClass().getClassLoader().getResource("/"+scannerPackage.replaceAll("\\.","/"));
+        URL url = this.getClass().getResource("/"+scannerPackage.replaceAll("\\.","/"));
         File classPath = new File(url.getFile());
         for (File file: classPath.listFiles()) {
             //如果是文件
             if(file.isDirectory()){
                 doScanner(scannerPackage+"."+file.getName());
             }else{
-                if(!file.getName().equals(".class")){continue;}
+                if(!file.getName().endsWith(".class")){continue;}
                 String className = (scannerPackage+"."+file.getName().replace(".class",""));
                 registyBeanClasses.add(className);
             }
@@ -64,7 +64,7 @@ public class ZCBeanDefinitionReader {
                 res.add(beanDefinition);
             }
         }
-        return null;
+        return res;
     }
 
     private ZCBeanDefinition doCreateBenanDefinition(String className){
