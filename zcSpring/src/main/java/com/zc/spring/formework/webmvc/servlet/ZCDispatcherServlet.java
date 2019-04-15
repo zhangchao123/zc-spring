@@ -3,6 +3,8 @@ package com.zc.spring.formework.webmvc.servlet;
 import com.zc.spring.formework.annotation.ZCRequestMapping;
 import com.zc.spring.formework.context.ZCApplicationContext;
 import com.zc.spring.formework.stereotype.ZCController;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -12,7 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -22,11 +26,13 @@ import java.util.regex.Pattern;
  * @Description: TODO
  * @date 2019/4/15/01516:27
  */
+@Slf4j
 public class ZCDispatcherServlet extends HttpServlet {
     private final String CONTEXT_CONFIG_LOACTION ="contextConfigLocation";
     private ZCApplicationContext context;
 
     private List<ZCHandlerMapping> handlerMappings = new ArrayList<ZCHandlerMapping>();
+    private Map<ZCHandlerMapping,ZCHandlerAdapter> handlerMappingZCHandlerAdapterMap = new HashMap<ZCHandlerMapping,ZCHandlerAdapter>();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPost(req, resp);
@@ -82,6 +88,11 @@ public class ZCDispatcherServlet extends HttpServlet {
     }
 
     private void initHandlerAdapters(ZCApplicationContext context) {
+        //把一个request请求变成一个heandler ，参数都是字符串，自动配到handler中
+        //那么，一个handlerMapping 对应一个heandler
+        for(ZCHandlerMapping handlerMapping:this.handlerMappings){
+            this.handlerMappingZCHandlerAdapterMap.put(handlerMapping,new ZCHandlerAdapter());
+        }
     }
 
     private void initHandlerMappings(ZCApplicationContext context) {
@@ -107,7 +118,7 @@ public class ZCDispatcherServlet extends HttpServlet {
 
                     ZCRequestMapping requestMapping = method.getAnnotation(ZCRequestMapping.class);
                     //替换所有有//的为/
-                    String regex = ("/"+baseUrl+"/"+requestMapping.value()).replaceAll("/+","/");
+                    String regex = ("/"+baseUrl+"/"+requestMapping.value().replaceAll("\\*",".*")).replaceAll("/+","/");
                     Pattern pattern = Pattern.compile(regex);
                     handlerMappings.add(new ZCHandlerMapping(object,method,pattern));
                 }
