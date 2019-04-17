@@ -13,6 +13,7 @@ import com.zc.spring.formework.stereotype.ZCService;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -27,6 +28,8 @@ public class ZCApplicationContext  extends ZCDefaultListableBeanFactory implemen
     //在getBean的时候，存储Bean的包装类
     private  Map<String,ZCBeanWrapper> factoryBeanInstanceCache = new ConcurrentHashMap<String,ZCBeanWrapper>();
 
+    private ZCBeanDefinitionReader reader;
+
     public ZCApplicationContext(String ...configLoactions){
         this.configLoactions  = configLoactions;
         refresh();
@@ -35,7 +38,7 @@ public class ZCApplicationContext  extends ZCDefaultListableBeanFactory implemen
     public void refresh() {
 
         //1.定位配置文件
-        ZCBeanDefinitionReader reader =  new ZCBeanDefinitionReader(this.configLoactions);
+        reader =  new ZCBeanDefinitionReader(this.configLoactions);
         //2.加载配置文件，扫描类，封装成ZCBeanDefiniton
         List<ZCBeanDefinition> beanDefinitionList =  reader.loadBeanDefinitions();
         //3.注册，把配置信息放到伪ioc容器中
@@ -71,7 +74,6 @@ public class ZCApplicationContext  extends ZCDefaultListableBeanFactory implemen
         Object instace = instantiateBean(beanName,beanDefinitionMap.get(beanName));
 
         ZCBeanWrapper wrapper = new ZCBeanWrapper(instace);
-
         // 2.把beanWarpper 存入ioc容器中
         this.factoryBeanInstanceCache.put(beanName,wrapper);
         //注入开始事件
@@ -80,7 +82,7 @@ public class ZCApplicationContext  extends ZCDefaultListableBeanFactory implemen
         populateBean(beanName,new ZCBeanDefinition(),wrapper);
         //注入结束事件
         postprocessor.postProcessAfterInitialization(instace,beanName);
-        return this.factoryBeanInstanceCache.get(beanName).getWrappedClass();
+        return this.factoryBeanInstanceCache.get(beanName).getWrappedInstance();
     }
 
     private void populateBean(String beanName, ZCBeanDefinition zcBeanDefinition, ZCBeanWrapper zcBeanWrapper) {
@@ -100,7 +102,12 @@ public class ZCApplicationContext  extends ZCDefaultListableBeanFactory implemen
                     }
                     //可访问私有
                     field.setAccessible(true);
+
                     try {
+                        //判断是否为接口
+                        if(field.getClass().isInterface()){
+
+                        }
                         field.set(instance,this.factoryBeanInstanceCache.get(autowiredBeanName).getWrappedInstance());
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
@@ -138,5 +145,9 @@ public class ZCApplicationContext  extends ZCDefaultListableBeanFactory implemen
 
     public int getBeanDefinitonCount(){
         return this.beanDefinitionMap.size();
+    }
+
+    public Properties getConfig(){
+        return this.reader.getConfig();
     }
 }

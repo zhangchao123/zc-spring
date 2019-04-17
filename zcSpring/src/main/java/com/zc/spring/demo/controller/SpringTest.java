@@ -14,6 +14,8 @@ public class SpringTest {
     public static void main(String[] args) throws Exception {
         ZCApplicationContext context = new ZCApplicationContext
                 ("application.properties");
-        context.getBean("indexController");
+        IndexController obj = (IndexController)context.getBean("indexController");
+        obj.queryTest("123123");
+
     }
 }

@@ -22,7 +22,7 @@ public class ZCBeanDefinitionReader {
 
     public ZCBeanDefinitionReader(String ... locations) {
         //读取配置文件
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(locations[0].replace("classpath",""));
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(locations[0].replace("classpath:",""));
         try {
             config.load(inputStream);
         } catch (IOException e) {
