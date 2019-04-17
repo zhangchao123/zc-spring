@@ -1,5 +1,10 @@
 package com.zc.spring.formework.context;
 
+import com.zc.spring.formework.aop.ZCAopProxy;
+import com.zc.spring.formework.aop.ZCCglibAopProxy;
+import com.zc.spring.formework.aop.ZCJdkDynamicAopProxy;
+import com.zc.spring.formework.aop.config.ZCAopConfig;
+import com.zc.spring.formework.aop.support.ZCAdvisedSupport;
 import com.zc.spring.formework.beans.ZCBeanFactory;
 import com.zc.spring.formework.beans.ZCBeanWrapper;
 import com.zc.spring.formework.beans.config.ZCBeanDefinition;
@@ -131,12 +136,37 @@ public class ZCApplicationContext  extends ZCDefaultListableBeanFactory implemen
             }else{
                 Class<?> clazz = Class.forName(className);
                 instace = clazz.newInstance();
+
+                ZCAdvisedSupport config = instantionAopConfig(zcBeanDefinition);
+                config.setTargetClass(clazz);
+                config.setTarget(instace);
+
+                //符合PointCut的规则的话，创建代理对象
+                if(config.pointCutMatch()) {
+                    instace = createProxy(config).getProxy();
+                }
+
                 this.singletonObjects.put(className,instace);
             }
         }catch(Exception e){
             e.printStackTrace();
         }
         return instace;
+    }
+
+    /**
+     * 创建代理对象
+     * @param config
+     * @return
+     */
+    private ZCAopProxy createProxy(ZCAdvisedSupport config) {
+
+        Class targetClass = config.getTargetClass();
+        //如果实现了接口，就用jdk，没有就cglib
+        if(targetClass.getInterfaces().length > 0){
+            return new ZCJdkDynamicAopProxy(config);
+        }
+        return new ZCCglibAopProxy(config);
     }
 
     public String[] getBeanDefinitionNames(){
@@ -149,5 +179,16 @@ public class ZCApplicationContext  extends ZCDefaultListableBeanFactory implemen
 
     public Properties getConfig(){
         return this.reader.getConfig();
+    }
+
+    private ZCAdvisedSupport instantionAopConfig(ZCBeanDefinition gpBeanDefinition) {
+        ZCAopConfig config = new ZCAopConfig();
+        config.setPointCut(this.reader.getConfig().getProperty("pointCut"));
+        config.setAspectClass(this.reader.getConfig().getProperty("aspectClass"));
+        config.setAspectBefore(this.reader.getConfig().getProperty("aspectBefore"));
+        config.setAspectAfter(this.reader.getConfig().getProperty("aspectAfter"));
+        config.setAspectAfterThrow(this.reader.getConfig().getProperty("aspectAfterThrow"));
+        config.setAspectAfterThrowingName(this.reader.getConfig().getProperty("aspectAfterThrowingName"));
+        return new ZCAdvisedSupport(config);
     }
 }
