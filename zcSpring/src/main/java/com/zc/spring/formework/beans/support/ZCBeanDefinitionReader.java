@@ -59,28 +59,32 @@ public class ZCBeanDefinitionReader {
 
         List<ZCBeanDefinition> res = new ArrayList<ZCBeanDefinition>();
         for(String className:registyBeanClasses){
-            ZCBeanDefinition beanDefinition = doCreateBenanDefinition(className);
-            if(beanDefinition!=null){
-                res.add(beanDefinition);
+            try {
+                Class<?> beanClass = Class.forName(className);
+
+                if(beanClass.isInterface()) { continue; }
+
+                res.add(doCreateBenanDefinition(toLowerFirstCase(beanClass.getSimpleName()),beanClass.getName()));
+
+                //获取这个类的所有接口，然后找到这个类的接口，把这个类作为接口的实现类进行后面的注入
+                Class<?> [] interfaces = beanClass.getInterfaces();
+                for (Class<?> i : interfaces) {
+                    //如果有多个，那么最后一个生效
+                    //后面在注入的时候，应该判断注解上是否注明了实现类的名称，如果没有，则使用默认的
+                    res.add(doCreateBenanDefinition(i.getName(),beanClass.getName()));
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
         }
         return res;
     }
 
-    private ZCBeanDefinition doCreateBenanDefinition(String className){
-        try {
-            Class<?> beanClass = Class.forName(className);
-            if(beanClass.isInterface()){
-                return  null;
-            }
-            ZCBeanDefinition beanDefinition = new ZCBeanDefinition();
-            beanDefinition.setBeanClassName(className);
-            beanDefinition.setFactoryBeanName(toLowerFirstCase(beanClass.getSimpleName()));
-            return beanDefinition;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
+    private ZCBeanDefinition doCreateBenanDefinition(String factoryBeanName,String beanClassName){
+        ZCBeanDefinition beanDefinition = new ZCBeanDefinition();
+        beanDefinition.setBeanClassName(beanClassName);
+        beanDefinition.setFactoryBeanName(factoryBeanName);
+        return beanDefinition;
     }
 
     private String toLowerFirstCase(String simpleName){

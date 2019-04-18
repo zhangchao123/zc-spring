@@ -8,5 +8,5 @@ package com.zc.spring.formework.aop.intercept;
  * @date 2019/4/17/01715:42
  */
 public interface ZCMethodInterceptor {
-    Object invoke(ZCMethodInterceptor invocation) throws Throwable;
+    Object invoke(ZCMethodInvocation invocation) throws Throwable;
 }

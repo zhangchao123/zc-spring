@@ -109,10 +109,8 @@ public class ZCApplicationContext  extends ZCDefaultListableBeanFactory implemen
                     field.setAccessible(true);
 
                     try {
-                        //判断是否为接口
-                        if(field.getClass().isInterface()){
-
-                        }
+                        //如果没有，则跳过（在加载ZCBeanDefinition的时候，如果是接口在loadBeanDefinitions方法，会把整个类全路径作为key，这里可以改进）
+                        if(this.factoryBeanInstanceCache.get(autowiredBeanName) == null){ continue; }
                         field.set(instance,this.factoryBeanInstanceCache.get(autowiredBeanName).getWrappedInstance());
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();

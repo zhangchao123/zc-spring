@@ -24,10 +24,10 @@ import java.util.Map;
 @ZCRequestMapping("/web")
 public class IndexController {
 
-    @ZCAutowired("indexService")
+    @ZCAutowired
     private IndexService indexService;
 
-    @ZCAutowired("queryService")
+    @ZCAutowired
     private IQueryService iQueryService;
 
 

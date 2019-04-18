@@ -82,12 +82,16 @@ public class ZCAdvisedSupport {
                     //before
                     if(!(null == config.getAspectBefore() || "".equals(config.getAspectBefore()))) {
                         //创建一个Advivce
-                        advices.add(new ZCMethodBeforeAdviceInterceptor(aspectMethods.get(config.getAspectBefore()),aspectClass.newInstance()));
+                        advices.add(new ZCMethodBeforeAdviceInterceptor
+                                (aspectMethods.get(config.getAspectBefore()),
+                                        aspectClass.newInstance()));
                     }
                     //after
                     if(!(null == config.getAspectAfter() || "".equals(config.getAspectAfter()))) {
                         //创建一个Advivce
-                        advices.add(new ZCAfterReturningAdviceInterceptor(aspectMethods.get(config.getAspectAfter()),aspectClass.newInstance()));
+                        advices.add(new ZCAfterReturningAdviceInterceptor
+                                (aspectMethods.get(config.getAspectAfter()),
+                                        aspectClass.newInstance()));
                     }
                     //afterThrowing
                     if(!(null == config.getAspectAfterThrow() || "".equals(config.getAspectAfterThrow()))) {
@@ -108,7 +112,7 @@ public class ZCAdvisedSupport {
         }
     }
     public Object getTarget(){
-        return null;
+            return this.target;
     }
     public void setTarget(Object target) {
         this.target = target;

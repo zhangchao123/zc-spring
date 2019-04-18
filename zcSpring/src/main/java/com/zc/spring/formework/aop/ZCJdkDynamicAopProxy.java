@@ -30,7 +30,7 @@ public class ZCJdkDynamicAopProxy implements ZCAopProxy, InvocationHandler {
 
     @Override
     public Object getProxy(ClassLoader classLoader) {
-        return Proxy.newProxyInstance(classLoader,this.advised.getClass().getInterfaces(),this);
+        return Proxy.newProxyInstance(classLoader,this.advised.getTargetClass().getInterfaces(),this);
     }
 
     @Override
