@@ -17,4 +17,5 @@ public class ZCAopConfig {
     private String aspectClass;
     private String aspectAfterThrow;
     private String aspectAfterThrowingName;
+    private String aspectAround;
 }

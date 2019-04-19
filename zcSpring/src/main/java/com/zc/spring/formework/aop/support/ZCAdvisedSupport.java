@@ -2,6 +2,7 @@ package com.zc.spring.formework.aop.support;
 
 import com.zc.spring.formework.aop.aspect.ZCAfterReturningAdviceInterceptor;
 import com.zc.spring.formework.aop.aspect.ZCAfterThrowingAdviceInterceptor;
+import com.zc.spring.formework.aop.aspect.ZCAroundAdviceInterceptor;
 import com.zc.spring.formework.aop.aspect.ZCMethodBeforeAdviceInterceptor;
 import com.zc.spring.formework.aop.config.ZCAopConfig;
 
@@ -91,6 +92,13 @@ public class ZCAdvisedSupport {
                         //创建一个Advivce
                         advices.add(new ZCAfterReturningAdviceInterceptor
                                 (aspectMethods.get(config.getAspectAfter()),
+                                        aspectClass.newInstance()));
+                    }
+                    //循环执行
+                    if(!(null == config.getAspectAround() || "".equals(config.getAspectAround()))) {
+                        //创建一个Advivce
+                        advices.add(new ZCAroundAdviceInterceptor
+                                (aspectMethods.get(config.getAspectAround()),
                                         aspectClass.newInstance()));
                     }
                     //afterThrowing

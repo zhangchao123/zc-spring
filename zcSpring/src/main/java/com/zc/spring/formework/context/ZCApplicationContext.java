@@ -179,13 +179,16 @@ public class ZCApplicationContext  extends ZCDefaultListableBeanFactory implemen
         return this.reader.getConfig();
     }
 
+
     private ZCAdvisedSupport instantionAopConfig(ZCBeanDefinition gpBeanDefinition) {
+        //这里创建可以做成单例，或者在启动的时候加载，不用每次getBean的时候都加载
         ZCAopConfig config = new ZCAopConfig();
         config.setPointCut(this.reader.getConfig().getProperty("pointCut"));
         config.setAspectClass(this.reader.getConfig().getProperty("aspectClass"));
         config.setAspectBefore(this.reader.getConfig().getProperty("aspectBefore"));
         config.setAspectAfter(this.reader.getConfig().getProperty("aspectAfter"));
         config.setAspectAfterThrow(this.reader.getConfig().getProperty("aspectAfterThrow"));
+        config.setAspectAround(this.reader.getConfig().getProperty("aspectAround"));
         config.setAspectAfterThrowingName(this.reader.getConfig().getProperty("aspectAfterThrowingName"));
         return new ZCAdvisedSupport(config);
     }

@@ -40,4 +40,9 @@ public class LogAspect {
                 "\nThrows:" + ex.getMessage());
     }
 
+    public void around(ZCJoinPoint joinPoint){
+        log.info("这里开启事务");
+
+    }
+
 }
