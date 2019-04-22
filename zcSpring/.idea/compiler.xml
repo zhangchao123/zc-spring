@@ -11,4 +11,9 @@
       </profile>
     </annotationProcessing>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="zc-Spring" options="-verbose -bootclasspath &quot;C:/Program Files/Java/jdk1.8.0_201/jre/lib/rt.jar&quot;" />
+    </option>
+  </component>
 </project>
