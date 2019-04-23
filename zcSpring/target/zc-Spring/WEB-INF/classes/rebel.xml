@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.zeroturnaround.com" xsi:schemaLocation="http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd">
+
+	<classpath>
+		<dir name="G:/gitHub/zc-spring/zcSpring/target/zc-Spring/WEB-INF/classes">
+			<include name="application.properties"/>
+			<include name="layouts/404.html"/>
+			<include name="layouts/500.html"/>
+		</dir>
+		<dir name="G:/gitHub/zc-spring/zcSpring/target/zc-Spring/WEB-INF/classes">
+			<include name="application.properties"/>
+			<include name="layouts/404.html"/>
+			<include name="layouts/500.html"/>
+		</dir>
+		<dir name="G:/gitHub/zc-spring/zcSpring/src/main/resources">
+			<include name="**/*"/>
+		</dir>
+		<dir name="G:/gitHub/zc-spring/zcSpring/src/main/java">
+			<exclude name="**/*.java"/>
+			<exclude name="**/*.class"/>
+		</dir>
+		<dir name="G:/gitHub/zc-spring/zcSpring/target/classes">
+		</dir>
+	</classpath>
+
+	<web>
+		<link target="/">
+			<dir name="G:/gitHub/zc-spring/zcSpring/src/main/webapp">
+			</dir>
+		</link>
+	</web>
+
+</application>
